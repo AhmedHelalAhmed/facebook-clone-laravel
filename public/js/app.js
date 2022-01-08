@@ -2171,7 +2171,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      posts: null
+      posts: null,
+      loading: true
     };
   },
   mounted: function mounted() {
@@ -2179,8 +2180,10 @@ __webpack_require__.r(__webpack_exports__);
 
     axios.get('/api/posts').then(function (response) {
       _this.posts = response.data.data;
+      _this.loading = false;
     })["catch"](function (error) {
       console.log('Unable to fetch posts');
+      _this.loading = false;
     });
   }
 });
@@ -20453,9 +20456,11 @@ var render = function () {
     [
       _c("new-post"),
       _vm._v(" "),
-      _vm._l(_vm.posts, function (post) {
-        return _c("post", { key: post.data.post_id, attrs: { post: post } })
-      }),
+      _vm.loading
+        ? _c("p", [_vm._v("Loading posts...")])
+        : _vm._l(_vm.posts, function (post) {
+            return _c("post", { key: post.data.post_id, attrs: { post: post } })
+          }),
     ],
     2
   )
