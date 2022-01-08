@@ -20250,7 +20250,7 @@ var render = function () {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "text-sm text-gray-600" }, [
-              _vm._v("12 mins"),
+              _vm._v(_vm._s(_vm.post.data.attributes.posted_at)),
             ]),
           ]),
         ]),

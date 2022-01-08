@@ -9,7 +9,7 @@
                 </div>
                 <div class="ml-6">
                     <div class="text-sm font-bold">{{ post.data.attributes.posted_by.data.attributes.name }}</div>
-                    <div class="text-sm text-gray-600">12 mins</div>
+                    <div class="text-sm text-gray-600">{{ post.data.attributes.posted_at}}</div>
                 </div>
             </div>
             <div class="mt-4">
