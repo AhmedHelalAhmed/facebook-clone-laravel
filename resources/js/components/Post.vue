@@ -16,9 +16,9 @@
                 <p>{{ post.data.attributes.body  }}</p>
             </div>
         </div>
-        <div class="w-full">
+        <div class="w-full" v-if="post.data.attributes.image">
             <img
-                src="https://images.pexels.com/photos/132037/pexels-photo-132037.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+                :src="post.data.attributes.image"
                 alt="post image" class="w-full">
         </div>
 
