@@ -1924,7 +1924,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2199,6 +2198,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_Post__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/Post */ "./resources/js/components/Post.vue");
 //
 //
 //
@@ -2210,12 +2210,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Show",
+  components: {
+    Post: _components_Post__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
   data: function data() {
     return {
       user: null,
-      loading: true
+      posts: null,
+      userLoading: true,
+      postsLoading: true
     };
   },
   mounted: function mounted() {
@@ -2226,14 +2248,14 @@ __webpack_require__.r(__webpack_exports__);
     })["catch"](function (error) {
       console.log('Unable to fetch the user from the server.');
     })["finally"](function () {
-      _this.loading = false;
+      _this.userLoading = false;
     });
-    axios.get('/api/posts/' + this.$route.params.userId).then(function (response) {
+    axios.get('/api/users/' + this.$route.params.userId + '/posts').then(function (response) {
       _this.posts = response.data.data;
-      _this.loading = false;
     })["catch"](function (error) {
       console.log('Unable to fetch posts');
-      _this.loading = false;
+    })["finally"](function () {
+      _this.postsLoading = false;
     });
   }
 });
@@ -19951,14 +19973,8 @@ var render = function () {
           _c(
             "div",
             { staticClass: "overflow-x-hidden w-2/3" },
-            [
-              _c("router-view"),
-              _vm._v(" "),
-              _vm._l(100, function (i) {
-                return _c("p", [_vm._v("gfsjdgfkahgf")])
-              }),
-            ],
-            2
+            [_c("router-view")],
+            1
           ),
         ],
         1
@@ -20518,23 +20534,72 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c(
+    "div",
+    { staticClass: "flex flex-col items-center" },
+    [
+      _c("div", { staticClass: "relative mb-8" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass:
+              "absolute flex items-center bottom-1 left-0 -mb-8 ml-12 z-20",
+          },
+          [
+            _vm._m(1),
+            _vm._v(" "),
+            _vm.userLoading
+              ? _c("p", [_vm._v("Loading user...")])
+              : _c("p", { staticClass: "text-2xl  text-gray-100 ml-4" }, [
+                  _vm._v(_vm._s(_vm.user.data.attributes.name)),
+                ]),
+          ]
+        ),
+      ]),
+      _vm._v(" "),
+      _vm.postsLoading
+        ? _c("p", [_vm._v("Loading posts...")])
+        : _vm._l(_vm.posts, function (post) {
+            return _c("post", { key: post.data.post_id, attrs: { post: post } })
+          }),
+      _vm._v(" "),
+      !_vm.postsLoading && _vm.posts.length < 1
+        ? _c("p", [_vm._v("\n        No posts found. Get Started...\n    ")])
+        : _vm._e(),
+    ],
+    2
+  )
 }
 var staticRenderFns = [
   function () {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", [
-      _c("div", { staticClass: "w-100 h-64 overflow-hidden" }, [
-        _c("img", {
-          staticClass: "object-cover w-full",
-          attrs: {
-            src: "https://images.unsplash.com/photo-1641566956210-3e4070983356?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-            alt: "user background image",
-          },
-        }),
-      ]),
+    return _c("div", { staticClass: "w-100 h-64 overflow-hidden z-10" }, [
+      _c("img", {
+        staticClass: "object-cover w-full",
+        attrs: {
+          src: "https://images.unsplash.com/photo-1641566956210-3e4070983356?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
+          alt: "user background image",
+        },
+      }),
+    ])
+  },
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "w-32" }, [
+      _c("img", {
+        staticClass:
+          "w-32 h-32 object-cover border-4 border-gray-200 rounded-full shadow-lg",
+        attrs: {
+          src: "https://cdn.pixabay.com/photo/2014/07/09/10/04/man-388104_960_720.jpg",
+          alt: "user profile image",
+        },
+      }),
     ])
   },
 ]
