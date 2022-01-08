@@ -8,12 +8,12 @@
                          alt="profile image for user" class="w-8 h-8 object-cover rounded-full">
                 </div>
                 <div class="ml-6">
-                    <div class="text-sm font-bold">Name User</div>
+                    <div class="text-sm font-bold">{{ post.data.attributes.posted_by.data.attributes.name }}</div>
                     <div class="text-sm text-gray-600">12 mins</div>
                 </div>
             </div>
             <div class="mt-4">
-                <p>Not having fun at all.</p>
+                <p>{{ post.data.attributes.body  }}</p>
             </div>
         </div>
         <div class="w-full">
@@ -57,7 +57,8 @@
 
 <script>
 export default {
-    name: "Post"
+    name: "Post",
+    props: ['post',]
 }
 </script>
 
