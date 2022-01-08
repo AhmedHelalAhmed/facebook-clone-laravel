@@ -2003,7 +2003,30 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "Nav"
+  name: "Nav",
+  data: function data() {
+    return {
+      user: null
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    axios.get('/api/auth-user').then(function (response) {
+      _this.user = response.data;
+    })["catch"](function (error) {
+      console.log('Unable to fetch auth user.');
+    });
+  },
+  computed: {
+    profileLink: function profileLink() {
+      if (!this.user) {
+        return '/';
+      }
+
+      return '/users/' + this.user.data.user_id;
+    }
+  }
 });
 
 /***/ }),
@@ -20109,7 +20132,7 @@ var render = function () {
             "router-link",
             {
               staticClass: "px-6 border-white h-full flex items-center",
-              attrs: { to: "/" },
+              attrs: { to: _vm.profileLink },
             },
             [
               _c("img", {
@@ -36440,7 +36463,7 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODU
     name: 'home',
     component: _views_NewsFeed__WEBPACK_IMPORTED_MODULE_2__["default"]
   }, {
-    path: '/user/:userId',
+    path: '/users/:userId',
     name: 'user.show',
     component: _views_Users_Show__WEBPACK_IMPORTED_MODULE_3__["default"]
   }]

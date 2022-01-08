@@ -15,7 +15,7 @@ export default new VueRouter({
             component: NewsFeed
         },
         {
-            path: '/user/:userId',
+            path: '/users/:userId',
             name: 'user.show',
             component: UserShow
         }

@@ -32,7 +32,7 @@
                         d="M22.6 11l-9.9-9c-.4-.4-1.1-.4-1.5 0l-9.9 9c-.3.3-.5.8-.3 1.2.2.5.6.8 1.1.8h1.6v9c0 .4.3.6.6.6h5.4c.4 0 .6-.3.6-.6v-5.5h3.2V22c0 .4.3.6.6.6h5.4c.4 0 .6-.3.6-.6v-9h1.6c.5 0 .9-.3 1.1-.7.3-.5.2-1-.2-1.3zm-2.5-8h-4.3l5 4.5V3.6c0-.3-.3-.6-.7-.6z"/>
                 </svg>
             </router-link>
-            <router-link class="px-6 border-white h-full flex items-center" to="/">
+            <router-link class="px-6 border-white h-full flex items-center" :to="profileLink">
                 <img src="https://cdn.pixabay.com/photo/2014/07/09/10/04/man-388104_960_720.jpg"
                      alt="profile image for user" class="w-8 h-8 object-cover rounded-full">
             </router-link>
@@ -54,7 +54,29 @@
 
 <script>
 export default {
-    name: "Nav"
+    name: "Nav",
+    data: () => {
+        return {
+            user: null
+        }
+    },
+    mounted() {
+        axios.get('/api/auth-user')
+            .then(response => {
+                this.user = response.data;
+            })
+            .catch(error => {
+                console.log('Unable to fetch auth user.');
+            });
+    },
+    computed: {
+        profileLink: function () {
+            if (!this.user) {
+                return '/';
+            }
+            return '/users/' + this.user.data.user_id;
+        }
+    }
 }
 </script>
 
