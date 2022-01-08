@@ -514,6 +514,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .h-10 {
   height: 2.5rem;
 }
+.h-64 {
+  height: 16rem;
+}
 .w-2\/3 {
   width: 66.666667%;
 }
