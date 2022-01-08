@@ -53,28 +53,20 @@
 </template>
 
 <script>
+
+import {mapGetters} from 'vuex';
+
 export default {
     name: "Nav",
-    data: () => {
-        return {
-            user: null
-        }
-    },
-    mounted() {
-        axios.get('/api/auth-user')
-            .then(response => {
-                this.user = response.data;
-            })
-            .catch(error => {
-                console.log('Unable to fetch auth user.');
-            });
-    },
     computed: {
+        ...mapGetters({
+            authUser: 'authUser'
+        }),
         profileLink: function () {
-            if (!this.user) {
+            if (!this.authUser) {
                 return '/';
             }
-            return '/users/' + this.user.data.user_id;
+            return '/users/' + this.authUser.data.user_id;
         }
     }
 }

@@ -23,7 +23,7 @@ export default {
         Sidebar
     },
     mounted() {
-        console.log('App mounted.')
+        this.$store.dispatch('fetchAuthUser');
     }
 }
 </script>

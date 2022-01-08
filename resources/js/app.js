@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import router from './router';
 import App from './components/App';
+import store from './store';
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -36,5 +37,6 @@ const app = new Vue({
     components: {
         App
     },
-    router
+    router,
+    store,
 });
