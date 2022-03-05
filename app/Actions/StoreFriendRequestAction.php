@@ -9,6 +9,6 @@ class StoreFriendRequestAction
 {
     public function __invoke(FriendDTO $friendDTO)
     {
-        Friend::query()->create($friendDTO->toArray());
+        return Friend::query()->create($friendDTO->toArray());
     }
 }

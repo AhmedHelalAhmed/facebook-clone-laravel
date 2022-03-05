@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Actions\StoreFriendRequestAction;
+use App\DataTransferObjects\FriendDTO;
 use App\Friend;
 use App\User;
 use Carbon\Carbon;
@@ -167,5 +169,71 @@ class FriendsTest extends TestCase
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $this->assertArrayHasKey('user_id', $response->json('errors.meta'));
         $this->assertArrayHasKey('status', $response->json('errors.meta'));
+    }
+
+    /** @test */
+    public function a_friendship_is_retrieved_when_fetching_the_profile()
+    {
+        $this->withoutExceptionHandling();
+        $this->actingAs($user = factory(User::class)->create(), 'api');
+        $anotherUser = factory(User::class)->create();
+        $storeFriendRequestAction = app(StoreFriendRequestAction::class);
+        $friendRequest = $storeFriendRequestAction(
+            new FriendDTO([
+                'userId' => $user->id,
+                'friendId' => $anotherUser->id,
+                'confirmedAt' => now()->subDay(),
+                'status' => 1,
+            ])
+        );
+        $this->get('/api/users/' . $anotherUser->id)
+            ->assertOk()
+            ->assertJson([
+                'data' => [
+                    'attributes' => [
+                        'friendship' => [
+                            'data' => [
+                                'friend_request_id' => $friendRequest->id,
+                                'attributes' => [
+                                    'confirmed_at' => '1 day ago'
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+    }
+
+    /** @test */
+    public function a_inverse_friendship_is_retrieved_when_fetching_the_profile()
+    {
+        $this->withoutExceptionHandling();
+        $this->actingAs($user = factory(User::class)->create(), 'api');
+        $anotherUser = factory(User::class)->create();
+        $storeFriendRequestAction = app(StoreFriendRequestAction::class);
+        $friendRequest = $storeFriendRequestAction(
+            new FriendDTO([
+                'friendId' => $user->id,
+                'userId' => $anotherUser->id,
+                'confirmedAt' => now()->subDay(),
+                'status' => 1,
+            ])
+        );
+        $this->get('/api/users/' . $anotherUser->id)
+            ->assertOk()
+            ->assertJson([
+                'data' => [
+                    'attributes' => [
+                        'friendship' => [
+                            'data' => [
+                                'friend_request_id' => $friendRequest->id,
+                                'attributes' => [
+                                    'confirmed_at' => '1 day ago'
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
     }
 }
