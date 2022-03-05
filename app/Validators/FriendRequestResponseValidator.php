@@ -8,8 +8,8 @@ class FriendRequestResponseValidator
     {
         return validator($attributes,
             [
-                'user_id' => '',
-                'status' => '',
+                'user_id' => 'required',
+                'status' => 'required',
             ]
         )->validate();
     }
