@@ -2,31 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\StoreFriendRequestAction;
+use App\DataTransferObjects\FriendDTO;
 use App\Exceptions\UserNotFoundException;
 use App\Friend;
 use App\Http\Resources\Friend as FriendResource;
-use App\User;
 use App\Validators\FriendRequestValidator;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Arr;
+use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class FriendRequestController extends Controller
 {
     /**
      * @throws UserNotFoundException
+     * @throws UnknownProperties
      */
-    public function store()
+    public function store(StoreFriendRequestAction $friendRequestAction)
     {
         $data = (new FriendRequestValidator())->validate(request()->all());
 
-        try {
-            User::query()
-                ->findOrFail(Arr::get($data, 'friend_id'))
-                ->friends()
-                ->attach(auth()->user());
-        } catch (ModelNotFoundException $modelNotFoundException) {
-            throw new UserNotFoundException;
-        }
+
+        $friendRequestAction(new FriendDTO([
+            'friendId' => Arr::get($data, 'friend_id'),
+            'userId' => auth()->id(),
+        ]));
 
 
         return new FriendResource(
