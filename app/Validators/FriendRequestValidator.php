@@ -8,7 +8,7 @@ class FriendRequestValidator
     {
         return validator($attributes,
             [
-                'friend_id' => ''
+                'friend_id' => 'required',
             ]
         )->validate();
     }

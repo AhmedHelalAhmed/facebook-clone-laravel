@@ -144,4 +144,15 @@ class FriendsTest extends TestCase
             ]
         ]);
     }
+
+    /** @test */
+    public function a_friend_id_is_required_for_friend_requests()
+    {
+        $response = $this->actingAs($user = factory(User::class)->create(), 'api')
+            ->post('/api/friend-request', [
+                'friend_id' => ''
+            ]);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $this->assertArrayHasKey('friend_id', $response->json('errors.meta'));
+    }
 }
