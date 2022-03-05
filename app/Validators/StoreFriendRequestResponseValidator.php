@@ -2,7 +2,7 @@
 
 namespace App\Validators;
 
-class FriendRequestResponseValidator
+class StoreFriendRequestResponseValidator
 {
     public function validate(array $attributes): array
     {

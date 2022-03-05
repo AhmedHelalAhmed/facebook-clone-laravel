@@ -171,7 +171,7 @@ class FriendsTest extends TestCase
         $this->assertArrayHasKey('status', $response->json('errors.meta'));
     }
 
-    /** @test */
+    /** @test */ // TODO refactor into convention
     public function a_friendship_is_retrieved_when_fetching_the_profile()
     {
         $this->withoutExceptionHandling();
@@ -204,7 +204,7 @@ class FriendsTest extends TestCase
             ]);
     }
 
-    /** @test */
+    /** @test */ // TODO refactor into convention
     public function a_inverse_friendship_is_retrieved_when_fetching_the_profile()
     {
         $this->withoutExceptionHandling();
@@ -236,4 +236,62 @@ class FriendsTest extends TestCase
                 ]
             ]);
     }
+
+    /** @test */ // TODO refactor into convention
+    public function friend_request_can_be_ignored()
+    {
+        $this->actingAs($user = factory(User::class)->create(), 'api');
+        $anotherUser = factory(User::class)->create();
+        $this->post('/api/friend-request', [
+            'friend_id' => $anotherUser->id
+        ])->assertOk();
+
+        $response = $this->actingAs($anotherUser, 'api')
+            ->delete('/api/friend-request-response/delete', [
+                'user_id' => $user->id,
+            ])->assertStatus(Response::HTTP_NO_CONTENT);
+
+        $friendRequest = Friend::first();
+        $this->assertNull($friendRequest);
+        $response->assertNoContent();
+    }
+
+    /** @test */ // TODO refactor into convention
+    public function only_the_recipient_can_ignore_a_friend_request()
+    {
+        $this->actingAs($user = factory(User::class)->create(), 'api');
+        $anotherUser = factory(User::class)->create();
+        $this->post('/api/friend-request', [
+            'friend_id' => $anotherUser->id
+        ])->assertOk();
+
+
+        $response = $this->actingAs(factory(User::class)->create(), 'api')
+            ->delete('/api/friend-request-response/delete', [
+                'user_id' => $user->id,
+            ])->assertNotFound();
+
+        $friendRequest = Friend::first();
+        $this->assertNull($friendRequest->confirmed_at);
+        $this->assertNull($friendRequest->status);
+        $response->assertJson([
+            'errors' => [
+                'code' => Response::HTTP_NOT_FOUND,
+                'title' => 'Friend Request Not Found',
+                'detail' => 'Unable to locate the friend request with the given information.'
+            ]
+        ]);
+    }
+
+    /** @test */ // TODO refactor into convention
+    public function a_user_id_is_required_for_ignoring_a_friend_request_response()
+    {
+        $response = $this->actingAs(factory(User::class)->create(), 'api')
+            ->delete('/api/friend-request-response/delete', [
+                'user_id' => '',
+            ]);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $this->assertArrayHasKey('user_id', $response->json('errors.meta'));
+    }
+
 }
