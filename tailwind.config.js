@@ -1,14 +1,12 @@
 module.exports = {
-    mode: 'jit',
     content: [
-        "./resources/**/*.blade.php",
-        './resources/js/components/*.{js,vue}',
-        './resources/js/views/*.{js,vue}',
-    ],
-    // These paths are just examples, customize them to match your project structure
-    purge: [
-        './public/js/*.{html,js}',
-        './public/css/*.css',
+        './resources/**/*.blade.php',
+        './resources/**/**/*.blade.php',
+        './resources/js/*.js',
+        './resources/sass/app.scss',
+        './resources/js/views/*/*.vue',
+        './resources/js/components/*.vue',
+        './resources/js/views/*.vue',
     ],
     theme: {
         extend: {},

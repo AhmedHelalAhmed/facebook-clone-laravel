@@ -2253,6 +2253,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Show",
@@ -20588,6 +20593,8 @@ var render = function () {
                 ]),
           ]
         ),
+        _vm._v(" "),
+        _vm._m(2),
       ]),
       _vm._v(" "),
       _vm.postsLoading
@@ -20632,6 +20639,28 @@ var staticRenderFns = [
         },
       }),
     ])
+  },
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass:
+          "absolute flex items-center bottom-1 right-0 mb-4 ml-12 z-20",
+      },
+      [
+        _c(
+          "button",
+          {
+            staticClass: "py-1 px-3 rounded bg-gray-400",
+            staticStyle: { "background-color": "rgb(156 163 175)" },
+          },
+          [_vm._v("Add Friend\n            ")]
+        ),
+      ]
+    )
   },
 ]
 render._withStripped = true
