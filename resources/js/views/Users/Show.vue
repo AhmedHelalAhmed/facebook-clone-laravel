@@ -13,8 +13,14 @@
                          alt="user profile image"
                          class="w-32 h-32 object-cover border-4 border-gray-200 rounded-full shadow-lg">
                 </div>
-                <p v-if="userLoading">Loading user...</p>
+                <p v-if="userStatus==='loading'">Loading user...</p>
                 <p v-else class="text-2xl  text-gray-100 ml-4">{{ user ? user.data.attributes.name : 'Not Found' }}</p>
+            </div>
+
+            <div class="absolute flex items-center bottom-1 right-0 mb-4 mr-12 z-20">
+                <button class="py-1 px-3 rounded bg-gray-400"
+                        style="background-color: rgb(156 163 175)">Add Friend
+                </button>
             </div>
         </div>
         <p v-if="postsLoading">Loading posts...</p>
@@ -28,6 +34,7 @@
 <script>
 
 import Post from "../../components/Post";
+import {mapGetters} from "vuex";
 
 export default {
     name: "Show",
@@ -36,25 +43,13 @@ export default {
     },
     data: () => {
         return {
-            user: null,
             posts: null,
-            userLoading: true,
             postsLoading: true,
         }
     },
     mounted() {
 
-        axios.get('/api/users/' + this.$route.params.userId)
-            .then(response => {
-                this.user = response.data;
-            })
-            .catch(error => {
-                console.log('Unable to fetch the user from the server.');
-            })
-            .finally(() => {
-                this.userLoading = false;
-
-            });
+        this.$store.dispatch('fetchUser', this.$route.params.userId);
 
         axios.get('/api/users/' + this.$route.params.userId + '/posts')
             .then(response => {
@@ -66,6 +61,9 @@ export default {
             .finally(() => {
                 this.postsLoading = false;
             });
+    },
+    computed: {
+        ...mapGetters({user: 'user', userStatus: 'userStatus'})
     }
 }
 </script>

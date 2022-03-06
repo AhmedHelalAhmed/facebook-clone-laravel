@@ -2226,6 +2226,13 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Post__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/Post */ "./resources/js/components/Post.vue");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2258,6 +2265,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Show",
@@ -2266,22 +2275,14 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      user: null,
       posts: null,
-      userLoading: true,
       postsLoading: true
     };
   },
   mounted: function mounted() {
     var _this = this;
 
-    axios.get('/api/users/' + this.$route.params.userId).then(function (response) {
-      _this.user = response.data;
-    })["catch"](function (error) {
-      console.log('Unable to fetch the user from the server.');
-    })["finally"](function () {
-      _this.userLoading = false;
-    });
+    this.$store.dispatch('fetchUser', this.$route.params.userId);
     axios.get('/api/users/' + this.$route.params.userId + '/posts').then(function (response) {
       _this.posts = response.data.data;
     })["catch"](function (error) {
@@ -2289,7 +2290,11 @@ __webpack_require__.r(__webpack_exports__);
     })["finally"](function () {
       _this.postsLoading = false;
     });
-  }
+  },
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapGetters"])({
+    user: 'user',
+    userStatus: 'userStatus'
+  }))
 });
 
 /***/ }),
@@ -20005,7 +20010,7 @@ var render = function () {
           _c(
             "div",
             { staticClass: "overflow-x-hidden w-2/3" },
-            [_c("router-view")],
+            [_c("router-view", { key: _vm.$route.fullPath })],
             1
           ),
         ],
@@ -20582,7 +20587,7 @@ var render = function () {
           [
             _vm._m(1),
             _vm._v(" "),
-            _vm.userLoading
+            _vm.userStatus === "loading"
               ? _c("p", [_vm._v("Loading user...")])
               : _c("p", { staticClass: "text-2xl  text-gray-100 ml-4" }, [
                   _vm._v(
@@ -20648,7 +20653,7 @@ var staticRenderFns = [
       "div",
       {
         staticClass:
-          "absolute flex items-center bottom-1 right-0 mb-4 ml-12 z-20",
+          "absolute flex items-center bottom-1 right-0 mb-4 mr-12 z-20",
       },
       [
         _c(
@@ -37796,6 +37801,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _modules_user__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/user */ "./resources/js/store/modules/user.js");
 /* harmony import */ var _modules_title__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/title */ "./resources/js/store/modules/title.js");
+/* harmony import */ var _modules_profile__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/profile */ "./resources/js/store/modules/profile.js");
+
 
 
 
@@ -37804,9 +37811,61 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
   modules: {
     User: _modules_user__WEBPACK_IMPORTED_MODULE_2__["default"],
-    Title: _modules_title__WEBPACK_IMPORTED_MODULE_3__["default"]
+    Title: _modules_title__WEBPACK_IMPORTED_MODULE_3__["default"],
+    Profile: _modules_profile__WEBPACK_IMPORTED_MODULE_4__["default"]
   }
 }));
+
+/***/ }),
+
+/***/ "./resources/js/store/modules/profile.js":
+/*!***********************************************!*\
+  !*** ./resources/js/store/modules/profile.js ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var state = {
+  user: null,
+  userStatus: null
+};
+var getters = {
+  user: function user(state) {
+    return state.user;
+  },
+  userStatus: function userStatus(state) {
+    return state.userStatus;
+  }
+};
+var actions = {
+  fetchUser: function fetchUser(_ref, userId) {
+    var commit = _ref.commit,
+        state = _ref.state;
+    commit('setUserStatus', 'loading');
+    axios.get('/api/users/' + userId).then(function (response) {
+      commit('setUser', response.data);
+      commit('setUserStatus', 'success');
+    })["catch"](function (error) {
+      commit('setUserStatus', 'error');
+    });
+  }
+};
+var mutations = {
+  setUser: function setUser(state, user) {
+    state.user = user;
+  },
+  setUserStatus: function setUserStatus(state, status) {
+    state.userStatus = status;
+  }
+};
+/* harmony default export */ __webpack_exports__["default"] = ({
+  state: state,
+  getters: getters,
+  actions: actions,
+  mutations: mutations
+});
 
 /***/ }),
 
