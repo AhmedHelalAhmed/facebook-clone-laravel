@@ -20580,7 +20580,11 @@ var render = function () {
             _vm.userLoading
               ? _c("p", [_vm._v("Loading user...")])
               : _c("p", { staticClass: "text-2xl  text-gray-100 ml-4" }, [
-                  _vm._v(_vm._s(_vm.user.data.attributes.name)),
+                  _vm._v(
+                    _vm._s(
+                      _vm.user ? _vm.user.data.attributes.name : "Not Found"
+                    )
+                  ),
                 ]),
           ]
         ),
@@ -20592,7 +20596,7 @@ var render = function () {
             return _c("post", { key: post.data.post_id, attrs: { post: post } })
           }),
       _vm._v(" "),
-      !_vm.postsLoading && _vm.posts.length < 1
+      !_vm.postsLoading && (!_vm.posts || _vm.posts.length < 1)
         ? _c("p", [_vm._v("\n        No posts found. Get Started...\n    ")])
         : _vm._e(),
     ],
@@ -38016,8 +38020,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /var/www/html/facebook-clone-laravel/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /var/www/html/facebook-clone-laravel/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /var/www/app/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /var/www/app/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

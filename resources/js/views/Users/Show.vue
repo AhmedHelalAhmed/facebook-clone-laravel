@@ -14,12 +14,12 @@
                          class="w-32 h-32 object-cover border-4 border-gray-200 rounded-full shadow-lg">
                 </div>
                 <p v-if="userLoading">Loading user...</p>
-                <p v-else class="text-2xl  text-gray-100 ml-4">{{ user.data.attributes.name }}</p>
+                <p v-else class="text-2xl  text-gray-100 ml-4">{{ user ? user.data.attributes.name : 'Not Found' }}</p>
             </div>
         </div>
         <p v-if="postsLoading">Loading posts...</p>
         <post v-else v-for="post in posts" :post="post" :key="post.data.post_id"></post>
-        <p v-if="!postsLoading && posts.length <1 ">
+        <p v-if="!postsLoading && (!posts || posts.length <1) ">
             No posts found. Get Started...
         </p>
     </div>
